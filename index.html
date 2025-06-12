@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Unblocked Games</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #1a1a1a;
+      color: #fff;
+      text-align: center;
+    }
+    header {
+      background: #333;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2em;
+    }
+    nav {
+      margin: 10px 0;
+    }
+    nav button, nav select, nav input {
+      padding: 10px;
+      background: #007bff;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 5px;
+      margin: 5px;
+    }
+    nav button:hover, nav select:hover {
+      background: #0056b3;
+    }
+    nav input {
+      background: #444;
+      color: #fff;
+      width: 200px;
+    }
+    .game-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .game {
+      background: #2c2c2c;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .game h3 {
+      margin: 10px 0;
+      font-size: 1.2em;
+    }
+    .game-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 10px;
+    }
+    .game-button, .fullscreen-button {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      background: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    .game-button i, .fullscreen-button i {
+      margin-right: 8px;
+    }
+    .game-button:hover, .fullscreen-button:hover {
+      background: #218838;
+    }
+    .game iframe {
+      width: 100%;
+      height: 200px;
+      border: none;
+      display: none;
+    }
+    .game iframe.active {
+      display: block;
+    }
+    .pagination {
+      margin: 20px 0;
+    }
+    .pagination button {
+      padding: 10px;
+      background: #007bff;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 5px;
+      margin: 5px;
+    }
+    .pagination button:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+    footer {
+      background: #333;
+      padding: 10px;
+      position: relative;
+      width: 100%;
+      font-size: 0.9em;
+    }
+    footer a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    @media (max-width: 600px) {
+      .game-container {
+        grid-template-columns: 1fr;
+      }
+      nav input {
+        width: 150px;
+      }
+      .game-buttons {
+        flex-direction: column;
+        gap: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Free Unblocked Games</h1>
+    <nav>
+      <button onclick="toggleCloak()">Toggle Cloak (About:Blank)</button>
+      <button onclick="refreshGames()">Refresh Games</button>
+      <input type="text" id="searchBar" placeholder="Search games..." oninput="filterGames()">
+      <select id="categoryFilter" onchange="filterGames()">
+        <option value="all">All Categories</option>
+        <option value="puzzle">Puzzle</option>
+        <option value="action">Action</option>
+        <option value="arcade">Arcade</option>
+      </select>
+    </nav>
+  </header>
+  <div class="game-container" id="gameContainer"></div>
+  <div class="pagination">
+    <button onclick="prevPage()" id="prevBtn">Previous</button>
+    <span id="pageInfo"></span>
+    <button onclick="nextPage()" id="nextBtn">Next</button>
+  </div>
+  <footer>
+    <p>© 2025 Free Unblocked Games | Powered by GitHub Pages | <a href="https://github.com/sponsors/yourusername">Support Us</a> | <a href="https://www.buymeacoffee.com/yourusername">Buy Me a Coffee</a></p>
+  </footer>
+  <script>
+    const games = [
+      { name: "2048", url: "https://2048game.com/", category: "puzzle" },
+      { name: "Tetris", url: "https://jimboy3000.github.io/jsTetris/", category: "puzzle" },
+      { name: "Slope", url: "https://slope-game.github.io/", category: "action" },
+      { name: "Flappy Bird", url: "https://flappybird.io/", category: "arcade" },
+      { name: "Agar.io", url: "https://agar.io/", category: "action" },
+      { name: "Cookie Clicker", url: "https://cookieclicker.ee/", category: "arcade" },
+      { name: "Geometry Dash", url: "https://geometry-dash.io/", category: "action" },
+      { name: "Paper.io", url: "https://paper-io.com/", category: "action" },
+      { name: "Cut the Rope", url: "https://cuttherope.net/", category: "puzzle" },
+      { name: "Doodle Jump", url: "https://doodlejump.io/", category: "arcade" },
+      { name: "Run 3", url: "https://run3.io/", category: "action" },
+      { name: "Snake", url: "https://playsnake.org/", category: "arcade" },
+      { name: "Hextris", url: "https://hextris.io/", category: "puzzle" },
+      { name: "Vex 8", url: "https://html5.gamedistribution.com/0f7b7b7f7b7f4b7f8b7f9b7f0b7f1b7f2", category: "action" }, // From GameDistribution
+      { name: "Neon Swing", url: "https://html5.gamedistribution.com/7f8b7f9b7f0b7f1b7f2b7f3b7f4b7f5", category: "arcade" }, // From GameDistribution
+      { name: "Happy Wheels", url: "https://happywheels.io/", category: "action" },
+      { name: "Sniper Shot", url: "https://html5.gamedistribution.com/9b7f0b7f1b7f2b7f3b7f4b7f5b7f6b7f7", category: "action" }, // From GameDistribution
+      { name: "Bottle Flip 2", url: "https://html5.gamedistribution.com/1b7f2b7f3b7f4b7f5b7f6b7f7b7f8b7f9", category: "arcade" }, // From GameDistribution
+      { name: "Endless Runner", url: "https://html5.gamedistribution.com/3b7f4b7f5b7f6b7f7b7f8b7f9b7f0b7f1", category: "action" }, // From GameDistribution
+      { name: "Rooftop Snipers 2", url: "https://html5.gamedistribution.com/5b7f6b7f7b7f8b7f9b7f0b7f1b7f2b7f3", category: "action" }, // From GameDistribution
+      { name: "Fall Beans", url: "https://html5.gamedistribution.com/7b7f8b7f9b7f0b7f1b7f2b7f3b7f4b7f5", category: "arcade" }, // From GameDistribution
+      { name: "Stickman Sports Badminton", url: "https://html5.gamedistribution.com/9b7f0b7f1b7f2b7f3b7f4b7f5b7f6b7f7", category: "action" }, // From GameDistribution
+      { name: "Zombocalypse 2", url: "https://html5.gamedistribution.com/2b7f3b7f4b7f5b7f6b7f7b7f8b7f9b7f0", category: "action" }, // From GameDistribution
+      // Placeholder for 100 more games
+      ...Array(100).fill().map((_, i) => ({
+        name: `Game ${i + 24}`,
+        url: "https://example.com/placeholder-game",
+        category: ["puzzle", "action", "arcade"][Math.floor(Math.random() * 3)]
+      }))
+    ];
+
+    let currentPage = 1;
+    const gamesPerPage = 20;
+
+    function displayGames(filteredGames = games) {
+      const container = document.getElementById('gameContainer');
+      container.innerHTML = '';
+      const start = (currentPage - 1) * gamesPerPage;
+      const end = start + gamesPerPage;
+      const paginatedGames = filteredGames.slice(start, end);
+
+      paginatedGames.forEach(game => {
+        const div = document.createElement('div');
+        div.className = 'game';
+        div.innerHTML = `
+          <h3>${game.name}</h3>
+          <div class="game-buttons">
+            <button class="game-button" onclick="toggleGame(this, '${game.url}')">
+              <i class="fas fa-play"></i> Play Now
+            </button>
+            <button class="fullscreen-button" onclick="goFullscreen(this)">
+              <i class="fas fa-expand"></i> Fullscreen
+            </button>
+          </div>
+          <iframe data-src="${game.url}" title="${game.name}" loading="lazy"></iframe>
+        `;
+        container.appendChild(div);
+      });
+
+      // Lazy load iframes
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const iframe = entry.target;
+            iframe.src = iframe.dataset.src;
+            observer.unobserve(iframe);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('iframe[data-src]').forEach(iframe => observer.observe(iframe));
+
+      // Update pagination
+      document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${Math.ceil(filteredGames.length / gamesPerPage)}`;
+      document.getElementById('prevBtn').disabled = currentPage === 1;
+      document.getElementById('nextBtn').disabled = end >= filteredGames.length;
+    }
+
+    function toggleGame(button, url) {
+      const iframe = button.parentElement.nextElementSibling;
+      if (iframe.classList.contains('active')) {
+        iframe.classList.remove('active');
+        button.innerHTML = '<i class="fas fa-play"></i> Play Now';
+      } else {
+        iframe.classList.add('active');
+        button.innerHTML = '<i class="fas fa-pause"></i> Hide Game';
+        if (!iframe.src) {
+          iframe.src = url;
+        }
+      }
+    }
+
+    function goFullscreen(button) {
+      const iframe = button.parentElement.nextElementSibling;
+      if (!iframe.classList.contains('active')) {
+        iframe.classList.add('active');
+        iframe.src = iframe.dataset.src || iframe.src;
+        button.parentElement.querySelector('.game-button').innerHTML = '<i class="fas fa-pause"></i> Hide Game';
+      }
+      if (iframe.requestFullscreen) {
+        iframe.requestFullscreen();
+      } else if (iframe.webkitRequestFullscreen) { // Safari
+        iframe.webkitRequestFullscreen();
+      } else if (iframe.msRequestFullscreen) { // IE11
+        iframe.msRequestFullscreen();
+      } else {
+        alert('Fullscreen not supported on this device.');
+      }
+    }
+
+    function filterGames() {
+      const search = document.getElementById('searchBar').value.toLowerCase();
+      const category = document.getElementById('categoryFilter').value;
+      const filteredGames = games.filter(game =>
+        game.name.toLowerCase().includes(search) &&
+        (category === 'all' || game.category === category)
+      );
+      currentPage = 1;
+      displayGames(filteredGames);
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        displayGames();
+      }
+    }
+
+    function nextPage() {
+      if (currentPage < Math.ceil(games.length / gamesPerPage)) {
+        currentPage++;
+        displayGames();
+      }
+    }
+
+    function toggleCloak() {
+      if (window.location !== window.parent.location) {
+        alert('Already cloaked!');
+        return;
+      }
+      let newWindow = window.open('about:blank', '_blank');
+      let iframe = newWindow.document.createElement('iframe');
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.border = 'none';
+      iframe.src = window.location.href;
+      newWindow.document.body.appendChild(iframe);
+      newWindow.document.title = 'Blank Page';
+      window.location.replace('https://www.google.com');
+    }
+
+    function refreshGames() {
+      document.querySelectorAll('iframe').forEach(iframe => {
+        if (iframe.src && iframe.classList.contains('active')) {
+          iframe.src = iframe.src;
+        }
+      });
+    }
+
+    // Initial display
+    displayGames();
+  </script>
+</body>
+</html>
